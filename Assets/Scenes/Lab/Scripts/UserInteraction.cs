@@ -19,9 +19,11 @@ public class UserInteraction : MonoBehaviour
     //ray to be used for mouse point, click, touch
     public UserInputRay userInputRay;
 
-    private ConicalFlask.FlaskNumber selectedFlask = ConicalFlask.FlaskNumber.none;
-    private bool flaskReadyForPour = false;
     private bool testTubeReadyForPour = false;
+    private bool flaskReadyForPour = false;
+    [HideInInspector] public ConicalFlask.FlaskNumber selectedFlask = ConicalFlask.FlaskNumber.none;
+    [HideInInspector] public bool pourComplete = false;
+    [HideInInspector] public bool shakeComplete = false;
 
     private void Awake()
     {
@@ -49,35 +51,40 @@ public class UserInteraction : MonoBehaviour
         if (!userInputRay.didRayHit)
             return;
 
-        if (!testTubeReadyForPour)
+        TestTubeClickFunction();
+        FlaskClickFunction();
+    }
+    private void TestTubeClickFunction()
+    {
+        if (userInputRay.hit.transform.GetComponent<TestTube>() == null)
+            return;
+
+        if (testTubeReadyForPour)
         {
-            CheckForTestTubeSelection();
+            userInputRay.hit.transform.GetComponent<TestTube>().StartPouring();
         }
+        else
+        {
+            if (flaskReadyForPour)
+                testTubeReadyForPour = true;
+            userInputRay.hit.transform.GetComponent<TestTube>().MoveTestTubeToPlate();
+        }
+    }
+    private void FlaskClickFunction()
+    {
+        if (userInputRay.hit.transform.GetComponent<ConicalFlask>() == null)
+            return;
 
         if (!flaskReadyForPour)
         {
-            CheckForFlaskSelection();
-        }
-    }
-    private void CheckForTestTubeSelection()
-    {
-        if (userInputRay.hit.transform.GetComponent<TestTube>() != null)
-        {
-            testTubeReadyForPour = true;
-            userInputRay.hit.transform.GetComponent<TestTube>().Select();
-        }
-    }
-    private void CheckForFlaskSelection()
-    {
-        try
-        {
             selectedFlask = userInputRay.hit.transform.GetComponent<ConicalFlask>().flaskNumber;
             flaskReadyForPour = true;
-            userInputRay.hit.transform.GetComponent<ConicalFlask>().Select();
+            userInputRay.hit.transform.GetComponent<ConicalFlask>().MoveFlaskToPlate();
         }
-        catch (NullReferenceException)
+        else
+        if (pourComplete)
         {
-            Debug.Log("Selected object does not have ConicalFlask component.");
+            userInputRay.hit.transform.GetComponent<ConicalFlask>().StartShaking();
         }
     }
 }
