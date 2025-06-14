@@ -140,6 +140,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18060ec319f9af34e9c73ac2fdee9918, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  flaskNumber: 1
+  selected: 0
 --- !u!64 &321266286
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -167,18 +169,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 979689423999079984, guid: b93b3eb2c7f70c34b85dcff57efa8bb5, type: 3}
   m_PrefabInstance: {fileID: 923061156}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &415665479
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 415665475}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18060ec319f9af34e9c73ac2fdee9918, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!136 &415665480
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -418,9 +408,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 979689423999079984, guid: b93b3eb2c7f70c34b85dcff57efa8bb5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 415665480}
-    - targetCorrespondingSourceObject: {fileID: 979689423999079984, guid: b93b3eb2c7f70c34b85dcff57efa8bb5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 415665479}
   m_SourcePrefab: {fileID: 100100000, guid: b93b3eb2c7f70c34b85dcff57efa8bb5, type: 3}
 --- !u!1 &954368151 stripped
 GameObject:
@@ -439,6 +426,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18060ec319f9af34e9c73ac2fdee9918, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  flaskNumber: 0
+  selected: 0
 --- !u!64 &954368156
 MeshCollider:
   m_ObjectHideFlags: 0

@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,7 +8,7 @@ public class UserInputRay
 {
     public Ray ray = new Ray();
     public RaycastHit hit;
-    public bool rayHit { get; set; }
+    public bool didRayHit { get; set; }
 }
 
 public class UserInteraction : MonoBehaviour
@@ -16,6 +18,10 @@ public class UserInteraction : MonoBehaviour
 
     //ray to be used for mouse point, click, touch
     public UserInputRay userInputRay;
+
+    private ConicalFlask.FlaskNumber selectedFlask = ConicalFlask.FlaskNumber.none;
+    private bool flaskReadyForPour = false;
+    private bool testTubeReadyForPour = false;
 
     private void Awake()
     {
@@ -30,15 +36,48 @@ public class UserInteraction : MonoBehaviour
         userInputRay = new();
     }
 
+    /// <summary>
+    /// Perform ScreenPointToRay at a point according to user input,
+    /// and select an object there if it exists.
+    /// </summary>
+    /// <param name="context"></param>
     private void AttemptObjectSelect(InputAction.CallbackContext context)
     {
         userInputRay.ray = Camera.main.ScreenPointToRay(context.ReadValue<Vector2>());
-        userInputRay.rayHit = Physics.Raycast(userInputRay.ray, out userInputRay.hit, 100);
+        userInputRay.didRayHit = Physics.Raycast(userInputRay.ray, out userInputRay.hit, 100);
 
-        if (userInputRay.rayHit)
+        if (!userInputRay.didRayHit)
+            return;
+
+        if (!testTubeReadyForPour)
         {
-            //currently only interactable objects have colliders
-            Debug.Log($"Tapped on {userInputRay.hit.transform.gameObject.name}");
+            CheckForTestTubeSelection();
+        }
+
+        if (!flaskReadyForPour)
+        {
+            CheckForFlaskSelection();
+        }
+    }
+    private void CheckForTestTubeSelection()
+    {
+        if (userInputRay.hit.transform.GetComponent<TestTube>() != null)
+        {
+            testTubeReadyForPour = true;
+            userInputRay.hit.transform.GetComponent<TestTube>().Select();
+        }
+    }
+    private void CheckForFlaskSelection()
+    {
+        try
+        {
+            selectedFlask = userInputRay.hit.transform.GetComponent<ConicalFlask>().flaskNumber;
+            flaskReadyForPour = true;
+            userInputRay.hit.transform.GetComponent<ConicalFlask>().Select();
+        }
+        catch (NullReferenceException)
+        {
+            Debug.Log("Selected object does not have ConicalFlask component.");
         }
     }
 }
